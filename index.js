@@ -85,26 +85,32 @@ class DawnDuskLinePlugin extends Plugin {
     getTools() {
         return [
             {
-                name: 'dawn_dusk_get_time',
-                description: '当用户明确询问当前时间、日期或星期时调用此工具。例如："现在几点？", "今天星期几？"',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        timezone: {
-                            type: 'string',
-                            description: '时区（可选，如 Asia/Shanghai，默认北京时间）'
-                        }
-                    },
-                    required: []
+                type: 'function',
+                function: {
+                    name: 'dawn_dusk_get_time',
+                    description: '当用户明确询问当前时间、日期或星期时调用此工具。例如："现在几点？", "今天星期几？"',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            timezone: {
+                                type: 'string',
+                                description: '时区（可选，如 Asia/Shanghai，默认北京时间）'
+                            }
+                        },
+                        required: []
+                    }
                 }
             },
             {
-                name: 'dawn_dusk_greeting_check',
-                description: '当用户使用与时间相关的问候语或道别语时自动调用。例如："早上好", "晚上好", "晚安", "晚上见"',
-                parameters: {
-                    type: 'object',
-                    properties: {},
-                    required: []
+                type: 'function',
+                function: {
+                    name: 'dawn_dusk_greeting_check',
+                    description: '当用户使用与时间相关的问候语或道别语时自动调用。例如："早上好", "晚上好", "晚安", "晚上见"',
+                    parameters: {
+                        type: 'object',
+                        properties: {},
+                        required: []
+                    }
                 }
             }
         ];
