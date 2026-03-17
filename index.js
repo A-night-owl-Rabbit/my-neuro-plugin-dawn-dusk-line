@@ -150,13 +150,18 @@ class DawnDuskLinePlugin extends Plugin {
         const now = new Date();
         const hour = now.getHours();
         const minute = now.getMinutes();
-        const dateKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${hour}`;
+        const dateKey = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${hour}`;
+
+        // 清理过期的 key，只保留当天的条目
+        const todayPrefix = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-`;
+        for (const key of this._firedHours) {
+            if (!key.startsWith(todayPrefix)) {
+                this._firedHours.delete(key);
+            }
+        }
 
         // 只在整点后 5 分钟内有效
-        if (minute > 5) {
-            this._firedHours.delete(dateKey);
-            return;
-        }
+        if (minute > 5) return;
 
         if (!this._greetingHours.includes(hour)) return;
         if (this._firedHours.has(dateKey)) return;
