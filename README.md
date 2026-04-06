@@ -9,7 +9,7 @@
 ### 环境感知（对齐 LLM 场景感知思路）
 
 - 可选在**每次大模型请求**时，于最后一条用户消息前注入一行前缀：`[发送时间: … | 星期, 工作日/法定节假日/调休, 上午|中午|下午|晚上|深夜]`，便于模型感知当前场景（与 AstrBot LLMPerception 一类做法同向）。
-- 中国**法定节假日与调休**依赖 [chinese-workday](https://www.npmjs.com/package/chinese-workday)（国务院放假数据）；未安装依赖时退化为仅按周一～周五 / 周末区分。
+- 中国**法定节假日与调休**依赖 [chinese-workday](https://www.npmjs.com/package/chinese-workday)（国务院放假数据）。**本仓库已附带 `node_modules/chinese-workday`**，克隆后即可用；若未带上依赖则退化为仅按周一～周五 / 周末区分。
 - 通过 **IANA 时区**（如 `Asia/Shanghai`）统一时间戳、当地日历日与整点问候触发时刻。
 
 ### 时间查询工具
@@ -36,10 +36,10 @@
 ## 快速开始
 
 1. 将本仓库内容放入 `plugins/community/dawn-dusk-line/` 目录（或保持文件夹名为 `dawn-dusk-line`）。
-2. 在插件目录执行 **`npm install`**，以安装 `chinese-workday`。
+2. **依赖已随仓库提供**（`node_modules/chinese-workday`）。若你本地删空了 `node_modules`，可在插件目录执行 **`npm install`** 重新拉取。
 3. 在插件管理页面启用插件，并按需在配置页调整参数。
 
-可选：安装依赖后可在插件目录执行 `npm run test:workday`，验证节假日模块能否经 CJS 缓存正确加载。
+可选：在插件目录执行 `npm run test:workday`，验证节假日模块能否经 CJS 缓存正确加载。
 
 ## 配置说明
 
@@ -47,7 +47,7 @@
 |--------|------|--------|
 | 感知与时钟时区 | IANA 时区名 | `Asia/Shanghai` |
 | 注入环境感知到 LLM | 是否在每次请求时注入上述前缀行 | 开启 |
-| 启用中国节假日与调休 | 依赖 `npm install`；关闭则仅按周末判断 | 开启 |
+| 启用中国节假日与调休 | 依赖 `chinese-workday`（仓库已含 `node_modules`，亦可 `npm install`）；关闭则仅按周末判断 | 开启 |
 | 节假日地区代码 | 目前仅 `CN` 使用国务院数据；其他值退化为仅周末 | `CN` |
 | 问候整点时刻 | 24 小时制，逗号分隔，按配置时区 | `0,8,12,18` |
 | 静默判定阈值（分钟） | 超过该时间未交互视为静默 | 10 |
@@ -91,8 +91,13 @@
 
 5. **仓库维护**  
    - 增加 `package.json` / `package-lock.json` 与 `test-load-workday.cjs`，便于依赖安装与本地校验。  
-   - `.gitignore` 忽略 `node_modules/` 与运行时生成的 `.chinese-workday-bundle.cjs`。  
+   - `.gitignore` 忽略运行时生成的 `.chinese-workday-bundle.cjs`。  
    - **未**包含任何 API Key、账号隐私或非本插件内的系统提示词；整点问候相关的**情景/语气类文案**保留在 `index.js` 中，与插件功能一致。
+
+### 2026-04-06（补充）— 将 `chinese-workday` 依赖纳入仓库
+
+- 为便于**离线使用**与**无需先执行 npm** 即可启用节假日数据，已将 **`node_modules/chinese-workday`**（与 `package-lock.json` 中锁定的 2.0.0 一致）提交到本仓库。  
+- `.gitignore` 不再排除 `node_modules`；仍忽略运行时生成的 `.chinese-workday-bundle.cjs`。
 
 ---
 
